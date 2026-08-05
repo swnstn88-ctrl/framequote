@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#201d1b">
+<title>GRAFT — 장편영화 트리트먼트 v4.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&amp;family=Noto+Sans+KR:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f2efe8;
+    --surface: #fbfaf6;
+    --ink: #24211e;
+    --muted: #6d675f;
+    --faint: #928b81;
+    --line: #d8d1c6;
+    --accent: #8e2e28;
+    --accent-soft: #eee1dd;
+    --serif: 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif;
+    --sans: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; color-scheme: light; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.78;
+    -webkit-font-smoothing: antialiased;
+  }
+  .hero {
+    min-height: 68vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 88px 28px 78px;
+    text-align: center;
+    background: #201d1b;
+    color: #f1ede5;
+  }
+  .kicker {
+    margin-bottom: 24px;
+    color: #c8877f;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .24em;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(68px, 13vw, 122px);
+    font-weight: 700;
+    letter-spacing: .11em;
+    text-indent: .11em;
+    line-height: 1;
+    color: #faf7f0;
+  }
+  .subtitle {
+    margin-top: 17px;
+    color: #b8b0a5;
+    font-family: var(--serif);
+    font-size: 15px;
+    letter-spacing: .38em;
+    text-indent: .38em;
+  }
+  .logline {
+    max-width: 650px;
+    margin-top: 48px;
+    font-family: var(--serif);
+    font-size: clamp(16px, 2.2vw, 19px);
+    line-height: 1.9;
+    word-break: keep-all;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 38px;
+  }
+  .meta span {
+    padding: 6px 11px;
+    border: 1px solid #4b4642;
+    border-radius: 999px;
+    color: #bdb5aa;
+    font-size: 11px;
+    letter-spacing: .05em;
+  }
+  .toc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(242,239,232,.94);
+    backdrop-filter: blur(12px);
+  }
+  .toc a {
+    padding: 7px 13px;
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .toc a:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 30px;
+  }
+  section {
+    padding: 88px 0;
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: 64px;
+  }
+  .section-label {
+    margin-bottom: 8px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .18em;
+  }
+  h2 {
+    margin-bottom: 34px;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: clamp(27px, 4vw, 36px);
+    font-weight: 600;
+    letter-spacing: -.02em;
+  }
+  p {
+    margin-bottom: 1.25em;
+    word-break: keep-all;
+  }
+  strong { font-weight: 600; }
+  ::selection { background: #d8b4ae; color: #201d1b; }
+  .story {
+    padding: 34px 38px 22px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: var(--serif);
+    font-size: 16.5px;
+    line-height: 1.92;
+  }
+  .cast {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .cast-card {
+    padding: 25px 26px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--surface);
+  }
+  .cast-card h3 {
+    margin-bottom: 3px;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 18px;
+  }
+  .role {
+    margin-bottom: 11px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .08em;
+  }
+  .cast-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.72;
+  }
+  .act {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 78px 0 20px;
+    padding: 16px 0 14px;
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .act:first-of-type { margin-top: 18px; }
+  .act small {
+    flex: 0 0 auto;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .12em;
+  }
+  .act h3 {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .beat {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    column-gap: 18px;
+    padding: 27px 0 30px;
+    border-top: 1px solid var(--line);
+  }
+  .beat:first-of-type { border-top: 0; }
+  .beat::before {
+    content: attr(data-n);
+    grid-column: 1;
+    grid-row: 1 / span 5;
+    color: var(--faint);
+    font-family: var(--serif);
+    font-size: 25px;
+    line-height: 1.2;
+    text-align: right;
+  }
+  .beat > * { grid-column: 2; }
+  .slug {
+    margin-bottom: 3px;
+    color: var(--faint);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+  .beat h4 {
+    margin-bottom: 11px;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 19.5px;
+    font-weight: 600;
+  }
+  .beat p {
+    color: #514c46;
+    font-size: 15.5px;
+    line-height: 1.82;
+  }
+  .dialogue {
+    margin: 14px 0 18px;
+    padding: 13px 16px;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 5px 5px 0;
+    background: var(--accent-soft);
+    color: #3f3833;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  footer {
+    padding: 58px 24px 72px;
+    text-align: center;
+  }
+  footer small {
+    color: var(--faint);
+    font-size: 11px;
+    letter-spacing: .13em;
+  }
+  @media (max-width: 680px) {
+    .hero { min-height: 62vh; padding: 70px 22px 62px; }
+    .logline { margin-top: 40px; }
+    .toc { justify-content: flex-start; overflow-x: auto; }
+    main { padding: 0 20px; }
+    section { padding: 68px 0; }
+    .story { padding: 25px 24px 14px; }
+    .cast { grid-template-columns: 1fr; }
+    .act { display: block; }
+    .act small { display: block; margin-bottom: 5px; }
+    .beat { grid-template-columns: 30px minmax(0, 1fr); column-gap: 12px; }
+    .beat::before { font-size: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  @media print {
+    body { background: white; color: black; }
+    .hero { min-height: auto; padding: 70px 30px; background: white; color: black; border-bottom: 1px solid #aaa; }
+    h1, .logline { color: black; }
+    .subtitle, .kicker, .meta span { color: #555; }
+    .meta span { border-color: #aaa; }
+    .toc { display: none; }
+    main { max-width: none; }
+    section { break-before: page; }
+    .beat { break-inside: avoid; }
+    p { orphans: 3; widows: 3; }
+    .story, .cast-card, .dialogue { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">장편영화 트리트먼트 · v4.2</div>
+  <h1>GRAFT</h1>
+  <div class="subtitle">이식</div>
+  <p class="logline">사지 재생 수술을 받고 집으로 돌아온 남자 앞에 그의 얼굴과 기억, 그리고 사고 때 잃어버린 원래 팔다리를 가진 또 다른 남자가 나타난다.</p>
+  <div class="meta"><span>미국 매사추세츠주</span><span>가까운 미래</span><span>바디호러</span><span>105분</span></div>
+</header>
+
+<nav class="toc" aria-label="문서 목차">
+  <a href="#story">이야기</a>
+  <a href="#characters">인물</a>
+  <a href="#treatment">트리트먼트</a>
+</nav>
+
+<main>
+
+<section id="story">
+  <div class="section-label">01</div>
+  <h2>이야기</h2>
+  <div class="story">
+    <p>포트 머시는 조선소가 문을 닫은 뒤 재생의학 산업으로 살아남은 작은 해안도시다. 테세우스 바이오로직스는 지역 최대 고용주이고, 병원과 재활센터 대부분에 회사 이름이 붙어 있다. 이 도시에서 테세우스의 도움을 받지 않고 큰 수술을 받기는 어렵다.</p>
+    <p>카지노 딜러인 에반 헤일은 오토바이 사고로 두 팔과 두 다리를 잃는다. 테세우스는 그의 몸에 새로운 사지를 길러 붙이고, 에반은 긴 재활 끝에 집으로 돌아온다.</p>
+    <p>하지만 돌아온 몸은 예전 몸과 다르다. 손은 떨리고, 오래된 흉터와 지문은 사라졌다. 가족의 개조차 그의 냄새를 낯설어한다. 그러던 어느 날, 에반의 사고 전 지문을 가진 사람이 그의 직장과 집을 드나들기 시작한다. 그 사람은 에반과 똑같은 얼굴을 하고 있다.</p>
+    <p>병원이 가져간 에반의 원래 팔다리는 폐기되지 않았다. 회사는 손상된 사지를 따로 회복시킨 뒤, 에반의 세포로 기른 몸에 붙였다. 재활 과정에서 모은 뇌 신호와 상담 기록, 가족 영상까지 새 몸을 훈련하는 데 사용했다. 그렇게 깨어난 두 번째 에반은 실험실에서 달아나 자신이 기억하는 집으로 돌아온다. 두 남자 사이에서 가족은 어느 한쪽을 쉽게 버리지 못한다.</p>
+  </div>
+</section>
+
+<section id="characters">
+  <div class="section-label">02</div>
+  <h2>인물</h2>
+  <div class="cast">
+    <div class="cast-card">
+      <h3>에반 헤일, 28세</h3>
+      <div class="role">카지노 포커 딜러</div>
+      <p>손재주와 외모에 자신이 있다. 불편한 이야기는 농담으로 넘기고, 중요한 결정은 미루는 편이다. 사고 뒤에는 예전의 자신으로 돌아가는 일에 집착한다. 두 번째 에반을 처음에는 사람으로 보지 않고, 자기에게서 훔쳐 간 물건처럼 대한다.</p>
+    </div>
+    <div class="cast-card">
+      <h3>두 번째 에반</h3>
+      <div class="role">테세우스 실험체 EH-01</div>
+      <p>에반의 원래 팔다리와 배양된 머리·몸통으로 만들어졌다. 에반의 기억을 대부분 갖고 있지만, 어떤 기억은 영상으로 배운 것인지 직접 겪은 것인지 구분하지 못한다. 가족을 빼앗으려는 악당이 아니라, 자신도 그 가족의 일원이라고 믿는 사람이다.</p>
+    </div>
+    <div class="cast-card">
+      <h3>마라 보스, 28세</h3>
+      <div class="role">에반의 연인</div>
+      <p>사고 전부터 에반과 함께 살 계획을 세웠지만 에반은 계속 결정을 미뤘다. 긴 재활을 곁에서 버텼으나, 두 에반 중 하나를 골라 사랑을 증명하라는 상황은 받아들이지 못한다.</p>
+    </div>
+    <div class="cast-card">
+      <h3>다이앤 헤일, 58세</h3>
+      <div class="role">에반의 어머니</div>
+      <p>가정 간병인으로 오래 일해 몸이 아픈 사람을 돌보는 데 익숙하다. 아들을 살리기 위해 수술 동의서에 서명했다. 그 서명으로 또 다른 아들이 만들어졌다는 죄책감 때문에 두 번째 에반을 외면하지 못한다.</p>
+    </div>
+    <div class="cast-card">
+      <h3>러셀 헤일, 62세</h3>
+      <div class="role">에반의 아버지</div>
+      <p>폐쇄된 조선소에서 용접공으로 일했다. 말수가 적고 낯선 것을 경계한다. 처음에는 두 번째 에반을 가짜라고 밀어내지만, 자신만 기억하는 아들의 버릇을 그에게서 발견하면서 흔들린다.</p>
+    </div>
+    <div class="cast-card">
+      <h3>로라 킨 박사, 40대</h3>
+      <div class="role">테세우스 재생 프로그램 책임의사</div>
+      <p>에반의 수술과 재활을 담당했다. 친절하고 차분하지만 환자와 실험체를 이름 대신 사례 번호로 생각한다. 자신이 사람을 살리는 일을 하고 있다고 진심으로 믿는다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="treatment">
+  <div class="section-label">03</div>
+  <h2>트리트먼트</h2>
+
+  <div class="act">
+    <small>1막</small>
+    <h3>사고 전의 에반</h3>
+  </div>
+
+  <div class="beat" data-n="1">
+    <div class="slug">앵커 카지노 포커룸 · 밤</div>
+    <h4>손</h4>
+    <p>에반은 작은 항구 카지노에서 포커 딜러로 일한다. 손님과 눈을 맞추면서도 카드 한 장 흐트러뜨리지 않는다. 단골 노인이 그의 손을 보고 “그 손에는 보험이라도 들어놨나?”라고 묻는다. 에반은 웃으며 “이 손 다치면 전 끝장이죠”라고 대답한다.</p>
+    <p>근무가 끝난 뒤 그는 직원 화장실 거울 앞에서 머리를 다시 만지고 셔츠 소매를 정리한다. 손을 씻다가 오른손등의 갈고리 모양 흉터를 본다. 어릴 때 아버지와 낚시하다 생긴 상처다. 그는 물기를 닦은 뒤 엄지로 흉터를 한 번 쓸어본다.</p>
+  </div>
+
+  <div class="beat" data-n="2">
+    <div class="slug">카지노 주차장 · 밤</div>
+    <h4>마라</h4>
+    <p>마라가 차 안에서 기다리고 있다. 두 사람은 다음 주에 보기로 한 아파트 이야기를 한다. 마라는 포트 머시를 떠나 보스턴으로 가고 싶어 하지만 에반은 새 딜러 자리가 확정될 때까지만 기다려 달라고 한다. 이미 여러 번 했던 말이다.</p>
+    <div class="dialogue">마라: “그 ‘다 준비되는 날’이 대체 언제인데?”</div>
+    <p>에반은 대답 대신 그녀의 손을 잡고 농담을 한다. 마라는 웃어주지만 표정이 완전히 풀리지는 않는다.</p>
+  </div>
+
+  <div class="beat" data-n="3">
+    <div class="slug">헤일 가족의 집 · 늦은 밤</div>
+    <h4>집</h4>
+    <p>에반은 아직 부모의 집에 산다. 늙은 개 로스코가 달려와 그의 오른손을 물고 늘어지는 놀이를 한다. 러셀은 비가 올 거라며 오토바이를 두고 가라고 말한다. 에반은 내일 아침 일찍 출근해야 한다며 괜찮다고 한다. 다이앤은 냉장고에 음식을 넣어뒀다고 말하지만 에반은 씻고 바로 방으로 올라간다.</p>
+    <p>이 집에서 모두가 에반을 기다려준다. 에반은 그 사실을 특별하게 생각하지 않는다.</p>
+  </div>
+
+  <div class="beat" data-n="4">
+    <div class="slug">하버 터널 · 새벽</div>
+    <h4>사고</h4>
+    <p>새벽까지 비가 내린다. 터널 안에서 트레일러가 갑자기 차선을 바꾼다. 에반이 급하게 핸들을 꺾지만 젖은 노면에서 오토바이가 미끄러지고, 그의 몸은 트레일러 뒷바퀴 쪽으로 밀려 들어간다. 충돌은 짧다. 부서진 오토바이가 바닥을 긁는 소리만 터널 안에 오래 남는다.</p>
+    <p>구급대원이 도착했을 때 에반은 의식이 없다. 도로 한쪽에는 오른팔이 떨어져 있다. 손가락은 아스팔트를 움켜쥔 채 굳어 있고, 손등의 갈고리 흉터는 빗물에 씻겨 선명하다.</p>
+  </div>
+
+  <div class="beat" data-n="5">
+    <div class="slug">세인트 브렌던 병원 · 응급실</div>
+    <h4>동의</h4>
+    <p>두 팔과 두 다리는 살릴 수 없다. 킨 박사는 부모에게 두 가지 선택을 설명한다. 절단 후 의수와 의족을 사용하는 방법, 또는 테세우스의 재생 프로그램에 들어가는 방법이다. 회사가 치료비 대부분을 부담하고, 성공하면 자기 몸처럼 움직이는 사지를 얻을 수 있다고 한다.</p>
+    <p>다이앤은 에반이 다시 걸을 수 있는지만 묻는다. 킨 박사는 가능성이 높다고 답한다. 러셀은 서류를 제대로 읽으려 하지만 글씨가 너무 작고 설명은 길다. 결국 두 사람은 수술 동의서와 절단 조직의 연구 사용 동의서에 서명한다.</p>
+  </div>
+
+  <div class="beat" data-n="6">
+    <div class="slug">수술실과 지하 주차장 · 밤</div>
+    <h4>잘려나간 것</h4>
+    <p>수술은 밤새 이어진다. 에반에게서 분리된 사지들은 각각 투명한 보존 주머니에 들어간다. 수술실 직원은 의료 폐기물 표식을 붙이려 하지만, 테세우스 직원이 다른 바코드를 건넨다.</p>
+    <p>의료진은 사지가 너무 심하게 손상돼 다시 붙일 수 없다고 판단한다. 그러나 사지가 담긴 상자는 소각장으로 가지 않는다. 테세우스 직원이 상자를 지하 주차장으로 옮긴다. 차가운 보존액 안에서 오른손 검지가 아주 조금 움직인다. 아무도 그것을 보지 못한다.</p>
+  </div>
+
+  <div class="act">
+    <small>2막</small>
+    <h3>돌아온 몸</h3>
+  </div>
+
+  <div class="beat" data-n="7">
+    <div class="slug">테세우스 재생 병동 · 여러 달</div>
+    <h4>다시 자라는 몸</h4>
+    <p>에반의 어깨와 골반 끝에서 먼저 뼈가 자란다. 그 위를 근육과 혈관이 감싸고 마지막에 피부가 덮인다. 새 손가락은 완전히 자라기도 전에 물속에서 오므라들었다 펴진다. 에반은 약에 취한 채 그 모습을 내려다보다 구토한다.</p>
+    <p>재활은 열여덟 달 동안 계속된다. 처음에는 숟가락을 들고, 다음에는 단추를 채우고, 마지막에는 카드 한 장을 집는다. 손끝은 계속 떨린다. 치료사는 시간이 지나면 나아질 거라고 말한다. 퇴원을 앞두고는 갈비뼈 아래에 쌀알만 한 감시장치를 넣는다. 새 사지에 이상이 생기면 병원에서 바로 알 수 있다는 설명뿐이다.</p>
+  </div>
+
+  <div class="beat" data-n="8">
+    <div class="slug">재활치료실 · 낮</div>
+    <h4>기억의 빈자리</h4>
+    <p>오랜 혼수와 수술 때문에 에반의 기억에는 군데군데 구멍이 생겼다. 그는 부모와 마라를 알아보지만, 함께 갔던 여행이나 어린 시절의 날짜를 자주 틀린다. 치료사는 가족사진과 홈비디오를 보여주며 기억을 되짚게 한다. 모든 세션은 연구용 카메라에 녹화된다.</p>
+    <p>마라는 매주 찾아온다. 에반은 그녀가 무슨 말을 원하는지 알면서도 미안하다는 말을 하지 못한다. 대신 퇴원하면 모든 것이 전과 같아질 거라고 약속한다.</p>
+  </div>
+
+  <div class="beat" data-n="9">
+    <div class="slug">헤일 가족의 집 · 저녁</div>
+    <h4>귀가</h4>
+    <p>퇴원한 날, 다이앤은 에반이 좋아하던 수프를 끓인다. 러셀은 평소보다 말을 많이 하고 마라도 식탁에 앉는다. 모두 반가워하지만 조심스럽다. 에반이 포크를 떨어뜨리자 대화가 잠시 멈췄다가 아무 일도 없었던 것처럼 다시 이어진다.</p>
+    <p>로스코는 에반의 얼굴을 알아보고 꼬리를 흔든다. 하지만 다리 냄새를 맡은 뒤 한 걸음 물러난다. 에반이 오른손을 내밀어도 예전처럼 물고 놀지 않는다.</p>
+  </div>
+
+  <div class="beat" data-n="10">
+    <div class="slug">에반의 욕실과 침실 · 밤</div>
+    <h4>예전 몸의 흔적</h4>
+    <p>에반은 샤워를 마친 뒤 옛 사진과 자신의 몸을 비교한다. 손등의 갈고리 흉터가 없고, 무릎의 점도 사라졌다. 손금은 완전히 다르다. 그는 사진을 확대하다가 자기가 무슨 짓을 하는지 깨닫고 휴대폰을 덮는다.</p>
+    <p>잠이 들면 이상한 감각이 찾아온다. 새 손은 가슴 위에 놓여 있는데, 몸에는 없는 예전 손이 따뜻한 물속에 잠겨 있는 것처럼 느껴진다. 누군가 손가락 사이를 천천히 씻어주는 느낌까지 난다. 편안한 감각이라 더 견디기 어렵다.</p>
+  </div>
+
+  <div class="beat" data-n="11">
+    <div class="slug">앵커 카지노 사무실 · 낮</div>
+    <h4>돌아가지 못하는 직장</h4>
+    <p>에반은 복직 심사를 받는다. 직원 면허를 갱신하려면 지문을 다시 등록해야 한다. 새 손가락을 스캐너에 올리자 사고 전 기록과 일치하지 않는다는 결과가 나온다. 병원 서류를 내도 담당자는 주정부 확인이 끝나기 전까지 카드를 만질 수 없다고 말한다.</p>
+    <p>카지노는 신원 확인이 끝날 때까지 에반에게 창고 정리와 마감 청소만 맡긴다. 포커룸을 지나 나오던 그를 단골들이 알아본다. 한 사람이 새 손이 전보다 깨끗해 보인다고 농담한다. 에반도 따라 웃지만 곧장 화장실로 들어가 손을 오래 씻는다.</p>
+  </div>
+
+  <div class="beat" data-n="12">
+    <div class="slug">카지노 보안실 · 며칠 뒤</div>
+    <h4>예전 지문</h4>
+    <p>카지노에서 연락이 온다. 누군가 에반의 사고 전 지문으로 직원 출입문과 그의 옛 사물함을 열었다. 보안 영상에는 모자를 눌러쓴 남자가 찍혀 있다. 얼굴이 잠깐 보이는 순간 에반은 숨을 멈춘다. 자기 얼굴이다.</p>
+    <p>남자는 돈이나 물건을 가져가지 않았다. 사물함 안쪽을 손으로 쓸어보고 한동안 빈 포커룸을 바라보다 나갔다. 보안 책임자는 영상 속 사람이 에반 아니냐고 묻는다. 에반은 대답하지 못한다.</p>
+  </div>
+
+  <div class="beat" data-n="13">
+    <div class="slug">헤일 가족의 집 · 아침</div>
+    <h4>누군가 다녀간 집</h4>
+    <p>부엌 건조대에 가족이 쓰지 않은 컵 하나가 깨끗이 씻겨 있다. 거실 서랍에 있던 낚시 사진은 식탁 위로 옮겨져 있다. 로스코는 전날 밤에 한 번도 짖지 않았다.</p>
+    <p>에반은 부모에게 문단속을 제대로 하라고 화를 낸다. 다이앤은 오히려 에반이 새벽에 내려와 물을 마신 것 아니냐고 묻는다. 에반은 그날 밤 느낀 따뜻한 물의 감각을 떠올리지만 말하지 않는다.</p>
+  </div>
+
+  <div class="beat" data-n="14">
+    <div class="slug">카지노 주차타워 · 새벽</div>
+    <h4>잘못 찾아온 사람들</h4>
+    <p>임시 업무를 마치고 나오던 에반을 검은 작업복 차림의 두 남자가 덮친다. 한 명이 팔을 등 뒤로 꺾고, 다른 한 명은 휴대용 스캐너의 푸른 빛으로 그의 어깨와 골반을 훑는다. 얼굴은 제대로 보지 않는다. 찢어진 셔츠 아래 매끈한 어깨가 드러나자 두 사람이 멈춘다.</p>
+    <div class="dialogue">“이쪽 아니야. 새로 자란 팔이야.”</div>
+    <p>그들은 에반을 바닥에 놓고 그대로 떠난다. 지갑과 휴대폰은 손대지 않았다. 사람을 잘못 찾았다는 말도, 사과도 없다. 자신을 고장 난 물건처럼 확인하고 버린 그 태도가 에반은 더 두렵다.</p>
+  </div>
+
+  <div class="beat" data-n="15">
+    <div class="slug">포트 머시 경찰서 · 낮</div>
+    <h4>설명할 수 없는 신고</h4>
+    <p>경찰은 폭행 신고를 받지만 범인을 특정하지 못한다. 집 창틀과 카지노 출입문에서 나온 지문은 모두 사고 전 에반의 지문과 일치한다. 현재 에반의 지문과는 다르다. 담당 경찰은 서류를 몇 번이나 확인한 뒤 솔직하게 말한다.</p>
+    <div class="dialogue">“이상하게 들리겠지만, 현장에 남은 건 헤일 씨의 사고 전 지문입니다. 지금 손의 지문이 아니라요.”</div>
+    <p>에반은 경찰서를 나와 자기 손을 주머니에 숨긴다.</p>
+  </div>
+
+  <div class="beat" data-n="16">
+    <div class="slug">헤일 가족의 집 부엌 · 새벽</div>
+    <h4>같은 얼굴</h4>
+    <p>새벽에 물소리를 듣고 내려온 에반은 싱크대 앞에 서 있는 남자를 본다. 남자는 오른손을 씻으며 갈라진 엄지손톱 밑을 조심스럽게 닦고 있다. 로스코는 그의 발등에 머리를 얹고 누워 있다.</p>
+    <p>남자가 돌아선다. 에반과 같은 얼굴이다. 다만 어깨가 조금 굳어 있고, 팔이 몸에 붙은 자리에 가느다란 붉은 선이 보인다. 남자는 부엌을 둘러보며 “찬장 위치가 바뀌었네”라고 말한다. 에반은 탁자 위 머그잔을 집어 던진다. 남자는 피하지 못해 이마가 찢어지지만 맞서 싸우지 않는다.</p>
+    <div class="dialogue">“소리 지르지 마. 부모님 깨.”</div>
+    <p>에반이 다시 달려들자 남자는 뒷문으로 도망친다. 다음 날 에반의 휴대폰에 자기 목소리로 녹음된 메시지가 도착한다. 구 조선소 7동으로 혼자 오라는 짧은 말뿐이다.</p>
+  </div>
+
+  <div class="act">
+    <small>3막</small>
+    <h3>두 번째 에반</h3>
+  </div>
+
+  <div class="beat" data-n="17">
+    <div class="slug">구 조선소 7동 · 밤</div>
+    <h4>버려진 연구동</h4>
+    <p>에반은 마라에게 야간 근무가 있다고 거짓말하고 조선소로 간다. 건물 밖은 녹슨 철판과 잡초로 덮여 있지만 지하에서는 기계 돌아가는 소리가 난다. 출입문은 잠겨 있지 않다.</p>
+    <p>안쪽 냉장실에는 잘린 손들이 투명한 보존 주머니에 하나씩 담겨 있다. 몇몇 손에는 힘줄을 대신하는 가느다란 선이 연결돼 있다. 기계가 움직일 때마다 손은 카드를 나누고, 칩을 모으고, 다시 손바닥을 편다. 벽의 모니터에는 사고 전 에반이 일하던 영상이 재생되고 있다.</p>
+  </div>
+
+  <div class="beat" data-n="18">
+    <div class="slug">7동 안쪽 작업실 · 밤</div>
+    <h4>무엇으로 만들어졌는가</h4>
+    <p>두 번째 에반이 작업실에서 기다리고 있다. 그는 셔츠를 벗어 어깨와 골반의 접합선을 보여준다. 머리와 몸통은 에반에게서 채취한 세포로 길렀고, 네 개의 팔다리는 사고 뒤 병원이 가져간 것이라고 말한다. 테세우스는 다시 붙일 수 없었던 사지들을 몸 밖에서 하나씩 회복시켰다.</p>
+    <p>회사는 그 사지들을 배양한 몸에 붙여도 움직일 수 있는지 시험했다. 새 몸을 훈련하기 위해 에반의 재활 영상과 뇌 신호, 상담 녹화본을 사용했다. 처음에는 걷고 카드를 잡는 동작만 따라 하던 몸이 어느 순간부터 영상 속 사람들의 이름을 부르고, 촬영되지 않은 일까지 기억한다고 말하기 시작했다.</p>
+    <p>두 번째 에반은 부모의 얼굴과 마라가 손을 잡던 느낌, 차고의 기름 냄새를 기억한다. 하지만 그 기억이 자기 안에서 생긴 것인지 화면으로 본 것을 외운 것인지 모른다. 연구원들은 그를 EH-01이라고 불렀고, 깨어난 뒤에도 사람처럼 말을 걸지 않았다.</p>
+    <p>에반은 작업실에 남은 내부 문서를 읽고 실험의 목적이 사지 이식만은 아니었다는 사실을 알게 된다. 회사는 죽은 사람의 몸과 기억을 다시 만들어 가족에게 돌려보내는 사업을 준비하고 있었다. 가족이 그 사람을 예전과 같은 사람으로 받아들이는지 확인하는 것이 마지막 단계였다. 원래 사람이 살아 있는 에반의 경우는 회사에도 처음이었다.</p>
+  </div>
+
+  <div class="beat" data-n="19">
+    <div class="slug">같은 장소 · 연속</div>
+    <h4>원하는 것</h4>
+    <p>에반은 왜 자기 집에 들어왔고 직장까지 찾아갔느냐고 묻는다. 두 번째 에반은 포커룸과 집이 기억 속에 계속 나타났고, 실제로 보면 무엇이 자기 기억인지 알 수 있을 것 같았다고 말한다.</p>
+    <div class="dialogue">에반: “그건 내 집이야.”<br>두 번째 에반: “알아. 그래서 문밖에 오래 있었어.”</div>
+    <p>두 번째 에반은 에반의 삶을 빼앗고 싶지 않다고 말한다. 단 한 번만 부모에게 자기가 존재한다는 사실을 알리고 싶다고 한다. 에반은 단호하게 거절한다. 자신에게서 잘라낸 팔다리 때문에 가족이 두 명의 아들을 감당할 이유는 없다고 말한다.</p>
+  </div>
+
+  <div class="beat" data-n="20">
+    <div class="slug">7동 복도와 드라이도크 · 밤</div>
+    <h4>회수</h4>
+    <p>밖에서 차량 여러 대가 멈춘다. 두 번째 에반은 몸속 감시장치가 위치까지 보내고 있었다고 말한다. 그는 옆구리의 서툰 절개 자국을 보여준다. 자기 것은 이미 꺼냈지만 에반에게도 같은 장치가 있다고 한다.</p>
+    <p>제거할 시간이 없다. 두 사람은 지하 통로를 지나 비어 있는 드라이도크로 달아난다. 회수팀은 얼굴이 보이는데도 이름을 부르지 않고 “00”과 “01”이라고만 외친다. 에반은 주차타워에서 자신을 붙잡았던 자들이 누구였는지 그제야 안다.</p>
+    <p>두 사람은 방파제 아래에서 갈라진다. 에반은 다시는 집 근처에 오지 말라고 한다. 두 번째 에반은 잠시 서 있다가 묻는다.</p>
+    <div class="dialogue">“그럼 나는 어디로 가?”</div>
+    <p>에반은 대답하지 않고 돌아선다.</p>
+  </div>
+
+  <div class="act">
+    <small>4막</small>
+    <h3>두 명의 아들</h3>
+  </div>
+
+  <div class="beat" data-n="21">
+    <div class="slug">헤일 가족의 집 뒷마당 · 오후</div>
+    <h4>다이앤</h4>
+    <p>며칠 뒤, 다이앤은 뒷마당 울타리 밖에 서 있는 두 번째 에반을 발견한다. 그는 집으로 들어오지 않고 기다린다. 다이앤은 처음에는 경찰을 부르려고 하지만 그의 오른손등에 난 갈고리 흉터를 본다. 어릴 때 직접 소독하고 붕대를 감아줬던 흉터다.</p>
+    <p>로스코가 울타리 틈으로 코를 내밀고 손 냄새를 맡는다. 곧 낑낑거리며 꼬리를 흔든다. 다이앤은 문을 잠근 채 그가 누구인지 묻는다. 두 번째 에반은 병원에서 버려진 팔다리로 자신을 만들었다고 대답한다. 다이앤은 아무 말 없이 뒷문 앞에 수프 한 그릇을 놓는다. 문은 끝내 열지 않는다. 그는 계단에 앉아 식은 수프를 다 먹는다.</p>
+  </div>
+
+  <div class="beat" data-n="22">
+    <div class="slug">헤일 가족의 집 부엌 · 저녁</div>
+    <h4>어머니가 숨긴 것</h4>
+    <p>에반은 싱크대에서 낯선 그릇을 발견하고 어머니가 두 번째 에반을 만났다는 사실을 알아낸다. 왜 경찰에 신고하지 않았느냐고 소리친다. 다이앤은 병원이 버린 줄 알았던 팔다리로 그 사람을 만들었다는 이야기를 들었다고 말한다. 자기가 서명한 동의서가 그 일을 가능하게 했다는 사실도 알고 있다.</p>
+    <div class="dialogue">에반: “그건 내가 아니야.”<br>다이앤: “나도 알아.”<br>에반: “그런데 왜 밥을 줘?”<br>다이앤: “배고프다고 했으니까.”</div>
+    <p>에반은 그 대답을 이해할 수 없다. 다이앤도 더 설명하지 못한다.</p>
+  </div>
+
+  <div class="beat" data-n="23">
+    <div class="slug">차고 · 밤</div>
+    <h4>러셀</h4>
+    <p>러셀은 두 번째 에반을 차고로 불러낸다. 작업대 위에 오래된 낚싯릴을 분해해 놓고 다시 조립해보라고 한다. 두 번째 에반의 손은 망설이지 않고 작은 스프링을 원래 자리에 끼운다. 에반이 열두 살 때 러셀에게 배운 순서다.</p>
+    <p>러셀은 그 기억을 어디서 배웠느냐고 묻는다. 두 번째 에반은 모른다고 답한다. 손이 먼저 움직였다고 한다. 러셀은 그를 아들이라고 부르지 않는다. 대신 냉장고에서 맥주 한 캔을 꺼내 건넨다. 둘은 차고 문을 반쯤 연 채 나란히 앉아 마신다.</p>
+  </div>
+
+  <div class="beat" data-n="24">
+    <div class="slug">방파제 · 낮</div>
+    <h4>마라</h4>
+    <p>마라는 두 에반을 한자리에 불러낸다. 첫 데이트가 끝난 뒤 자신이 무슨 말을 했는지 묻는다. 에반은 “다음에는 늦지 말라”고 했다고 답한다. 두 번째 에반은 같은 말을 되풀이하는 대신, 그 말을 듣기 전 마라가 주차장 화장실에서 울고 나왔다는 이야기를 꺼낸다. 그날 에반은 마라의 붉어진 눈을 보고도 모른 척했다. 두 사람은 그 일을 한 번도 입 밖에 낸 적이 없다.</p>
+    <p>에반의 대답은 맞다. 그런데 마라는 오히려 두 번째 에반을 바라본다. 그날 자신이 울었던 사실은 에반도 모르는 줄 알았다. 그녀는 둘을 번갈아 보다가 고개를 젓는다.</p>
+    <div class="dialogue">“나는 보면 알 줄 알았어. 그런데 모르겠어.”</div>
+    <p>그녀는 열쇠고리에서 헤일 집 열쇠를 빼 두 사람 사이에 내려놓고 떠난다. 어느 쪽도 바로 열쇠를 줍지 않는다.</p>
+  </div>
+
+  <div class="beat" data-n="25">
+    <div class="slug">헤일 가족의 집 식당 · 저녁</div>
+    <h4>접시 하나</h4>
+    <p>다이앤은 두 번째 에반을 저녁에 부른다. 에반이 막으려 하지만 다이앤은 그의 손을 조용히 옆으로 밀고 빈 자리에 접시 하나를 더 놓는다.</p>
+    <p>식사는 어색하게 시작된다. 러셀은 시선을 들지 않고 다이앤은 두 사람에게 같은 양의 수프를 준다. 두 번째 에반은 예전 에반처럼 빵의 딱딱한 가장자리를 먼저 뜯는다. 에반은 그 버릇을 오래전에 고쳤다고 말한다. 다이앤은 사고 전에는 늘 그랬다고 대답한다.</p>
+    <p>로스코는 식탁 아래에서 두 번째 에반의 발에 몸을 붙이고 잔다. 에반은 자기 자리에 앉아 있으면서도 손님이 된 기분을 느낀다.</p>
+  </div>
+
+  <div class="beat" data-n="26">
+    <div class="slug">거실과 계단 · 늦은 밤</div>
+    <h4>손톱</h4>
+    <p>두 번째 에반의 오른손 엄지손톱은 사고 때 손상된 자리에서 계속 갈라진다. 다이앤은 소파에 앉혀놓고 튀어나온 부분을 손톱깎이로 조금씩 잘라준다. 성인 아들의 손톱을 깎아주는 모습이 어색해 두 사람 모두 별말을 하지 않는다.</p>
+    <p>물을 마시러 내려오던 에반은 계단에서 멈춘다. 손톱깎이가 딸깍거릴 때마다 자기 새 손이 아니라, 오래전에 잘려나간 엄지 끝이 따끔거린다. 어머니가 다른 사람의 손을 잡고 있는데 그 온기가 자기에게도 느껴진다. 에반은 소리를 내지 않고 방으로 돌아간다.</p>
+  </div>
+
+  <div class="beat" data-n="27">
+    <div class="slug">에반의 차 · 새벽</div>
+    <h4>전화</h4>
+    <p>에반은 집 앞에 세운 차 안에서 킨 박사에게 전화한다. EH-01이 부모의 집에 있다고 말한다. 킨 박사는 가족도 그 존재를 보았는지, 집 안으로 받아들였는지 차례로 묻는다. 에반이 그렇다고 답하자 잠시 침묵한다.</p>
+    <div class="dialogue">킨 박사: “알겠습니다. 이제 저희가 처리하죠.”</div>
+    <p>에반은 전화를 끊고도 한동안 차에서 내리지 못한다. 자신이 한 일이 신고인지 배신인지 구분하려고 하지만, 결국 생각을 멈춘다.</p>
+  </div>
+
+  <div class="beat" data-n="28">
+    <div class="slug">차고 · 같은 밤</div>
+    <h4>떠날 사람</h4>
+    <p>두 번째 에반은 작은 가방에 옷을 넣고 있다. 가족이 잠든 뒤 떠날 생각이다. 그는 에반에게 자신이 계속 있으면 이 집이 망가질 것 같다고 말한다. 에반은 회사에 전화했다는 사실을 말하지 못한다.</p>
+    <div class="dialogue">두 번째 에반: “여기 오기 전에는 집만 보면 괜찮아질 줄 알았어. 보고 나니까 더 모르겠어.”</div>
+    <p>그는 아침이 되기 전에 나가겠다고 한다. 에반은 이제 그를 붙잡고 싶지만, 미안하다는 말을 꺼내지 못한다.</p>
+  </div>
+
+  <div class="act">
+    <small>5막</small>
+    <h3>남겨진 사람</h3>
+  </div>
+
+  <div class="beat" data-n="29">
+    <div class="slug">헤일 가족의 집 앞 · 새벽</div>
+    <h4>기다리던 밴</h4>
+    <p>에반은 잠이 오지 않아 밖으로 나온다. 길 건너에 검은 밴이 시동을 켠 채 서 있다. 방금 도착한 차가 아니다. 회사는 몸속 추적 장치의 신호를 따라왔다. 밴은 에반이 밖으로 나오기 전부터 그 자리에 서 있었다.</p>
+    <p>회수팀이 에반을 붙잡는다. 에반은 데려갈 사람은 집 안에 있다고 소리친다. 한 대원이 찢어진 소매 아래 매끈한 어깨를 확인하고 무전기에 말한다.</p>
+    <div class="dialogue">“EH-00 확인.”</div>
+    <p>이번에는 주차타워 때처럼 사람을 잘못 본 게 아니다. 가족이 두 번째 에반을 집 안으로 받아들인 순간 회사의 실험은 성공한 셈이 됐다. 이제 가족 곁에 남겨둘 사람은 EH-01이고, 회사의 비밀을 모두 아는 원래 에반은 없애야 할 증거다. 에반이 발버둥치지만 회수팀 여러 명이 달라붙자 버티지 못한다. 밴은 조용히 골목을 빠져나간다.</p>
+  </div>
+
+  <div class="beat" data-n="30">
+    <div class="slug">헤일 가족의 집 · 아침</div>
+    <h4>사라진 에반</h4>
+    <p>길가에는 에반의 휴대폰만 떨어져 있다. 테세우스의 법무팀은 에반이 스스로 후속 치료를 신청했다는 서류를 경찰에 제출한다. 서명도 병원 기록도 진짜처럼 보인다. 경찰은 성인 환자의 자발적인 입원이라며 실종 신고를 받아주지 않는다. 가족에게는 병원 이름도 알려주지 않는다.</p>
+    <p>두 번째 에반은 다이앤과 러셀에게 자신이 떠나겠다고 한다. 다이앤은 대답하지 않고 에반의 방 문을 연다. 침대 시트를 새로 갈고 베개를 놓는다.</p>
+    <div class="dialogue">다이앤: “오늘은 여기서 자.”</div>
+    <p>러셀은 반대하지 않는다. 현관 앞의 여행 가방은 그날 저녁까지 그대로 놓여 있다가 사라진다.</p>
+  </div>
+
+  <div class="beat" data-n="31">
+    <div class="slug">공해상 의료선 · 시간 불명</div>
+    <h4>EH-00</h4>
+    <p>에반은 창문 없는 병실에서 눈을 뜬다. 손목 밴드에는 이름 대신 EH-00이라고 적혀 있다. 커튼 너머 다른 침대들에서도 사람들이 자기 이름을 말하며 보내달라고 한다. 간호사들은 대답하지 않고 신체 치수를 잰다.</p>
+    <p>직원이 에반의 새 팔에 펜으로 절개선을 표시한다. 에반은 자신이 에반 헤일이라고 반복한다. 직원은 차트를 확인하고 고개를 끄덕인다.</p>
+    <div class="dialogue">“성함은 확인됐습니다.”</div>
+    <p>그 말 뒤에는 아무런 설명도 없다. 마취제가 들어오자 에반의 새 손이 떨리기 시작한다. 동시에 어디선가 자기 옛 손이 따뜻한 이불 속으로 들어가는 감각이 느껴진다.</p>
+  </div>
+
+  <div class="beat" data-n="32">
+    <div class="slug">앵커 카지노와 헤일 가족의 집 · 몇 달 후</div>
+    <h4>다시 돌아온 손</h4>
+    <p>두 번째 에반은 카지노 직원용 지문 스캐너에 오른손을 올린다. 초록불이 켜진다. 사고 전 에반의 지문과 일치한다. 포커룸으로 돌아간 그는 카드 덱을 잡는다. 손은 떨리지 않고 예전처럼 자연스럽게 움직인다. 직원들은 마침내 몸이 다 나았느냐고 묻는다. 그는 그렇다고 대답한다.</p>
+    <p>그날 저녁, 다이앤과 러셀은 그와 함께 식사한다. 마라의 자리는 비어 있고 누구도 그녀의 이름을 꺼내지 않는다. 열린 창문으로 찬 바람이 들어오자 그의 어깨 접합선이 붉게 올라온다. 다이앤은 잠시 바라보다가 말려 올라간 소매를 잡아당겨 그 선을 가린다.</p>
+    <p>그녀는 수프 그릇을 건네며 에반에게 창문을 닫아달라고 한다. 두 번째 에반은 자리에서 일어난다. 로스코도 몸을 일으켜 그의 뒤를 따른다.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <small>GRAFT · 장편영화 트리트먼트 v4.2</small>
+</footer>
+
+</body>
+</html>
